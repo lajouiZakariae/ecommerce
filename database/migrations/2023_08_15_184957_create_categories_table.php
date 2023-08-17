@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->string("name");
-            $table->string("slug")->unique();
+            $table->string("slug");
 
             $table->foreignIdFor(User::class);
         });

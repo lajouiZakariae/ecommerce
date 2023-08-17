@@ -17,6 +17,10 @@ export default function Product() {
         return <h2>Loading...</h2>;
     }
 
+    if (isError) {
+        return <h2>Error</h2>;
+    }
+
     return (
         <div className="card mt-2">
             <div className="card-body">

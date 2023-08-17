@@ -49,11 +49,13 @@ class User extends Authenticatable
     {
         return $this
             ->hasMany(Product::class)
-            ->when($options["limit"], function (Builder $query) use ($options) {
+            ->when(isset($options["limit"]), function (Builder $query) use ($options) {
                 $query->take($options["limit"]);
             })
-            ->when($options["sortBy"], function (Builder $query) use ($options) {
+            ->when(isset($options["sortBy"]), function (Builder $query) use ($options) {
+                $query->orderBy($options["sortBy"]);
             })
+            ->orderBy("id", "desc")
             ->get(["title", "price", "id"]);
     }
 
@@ -69,5 +71,13 @@ class User extends Authenticatable
 
             })
             ->get(["name", "hex", "id"]);
+    }
+
+    public function defaultCategoryId()
+    {
+        return $this
+            ->hasMany(Category::class)
+            ->first("id")
+            ->id;
     }
 }

@@ -18,11 +18,12 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->string("title");
-            $table->string("slug");
-            $table->float("cost");
-            $table->float("price");
-            $table->integer("quantity");
-            $table->enum("rating", [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
+            $table->string("slug")->unique();
+            $table->text("description")->nullable();
+            $table->float("cost")->nullable();
+            $table->float("price")->nullable();
+            $table->integer("quantity")->nullable();
+            // $table->enum("rating", [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
 
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Category::class);

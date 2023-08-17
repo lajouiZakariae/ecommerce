@@ -23,11 +23,12 @@ class ProductFactory extends Factory
 
         return [
             "title" => $title,
+            "description" => "",
             "slug" => Str::slug($title),
             "cost" => $price - 10,
             "price" => $price,
             "quantity" => fake()->numberBetween(10, 100),
-            "rating" => Arr::random([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 1)[0],
+            // "rating" => Arr::random([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 1)[0],
             "user_id" => 1,
             "category_id" => fake()->numberBetween(1, 10)
         ];

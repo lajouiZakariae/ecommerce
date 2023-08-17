@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
-import Navbar from "./Navbar";
-import Products from "./Products";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Navbar from "./Navbar";
+import Products from "./Products";
 import Colors from "./colors";
 import Product from "./Products/show";
 import EditProduct from "./Products/edit";
