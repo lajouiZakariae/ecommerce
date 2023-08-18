@@ -2,21 +2,21 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
-export default function Color({ id, name, hex, route }) {
+export default function Color({ id, name, hex }) {
     const queryClient = useQueryClient();
 
     const [isEdit, setIsEdit] = useState(false);
     const [color, setColor] = useState({ name, hex });
 
     const { mutate: deleteMutate } = useMutation(
-        (id) => axios.delete(`${route}/${id}`),
+        (id) => axios.delete(`/api/colors/${id}`),
         {
             onSuccess: () => queryClient.invalidateQueries("colors"),
         }
     );
 
     const { mutate: updateMutate } = useMutation(
-        () => axios.put(`${route}/${id}`, color),
+        () => axios.put(`/api/colors/${id}`, color),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries("colors");

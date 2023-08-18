@@ -2,12 +2,12 @@ import axios from "axios";
 import Color from "./item";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-function AddColorForm({ route }) {
+function AddColorForm() {
     const queryClient = useQueryClient();
     const { mutate, isError } = useMutation(
         (ev) => {
             ev.preventDefault();
-            return axios.post(route, new FormData(ev.target));
+            return axios.post("/api/colors", new FormData(ev.target));
         },
         {
             onSuccess: ({ data }) => console.log(data), //queryClient.invalidateQueries("colors"),
@@ -61,8 +61,8 @@ export default function Colors() {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.colors.map((color) => (
-                        <Color route={data.route} key={color.id} {...color} />
+                    {data.map((color) => (
+                        <Color key={color.id} {...color} />
                     ))}
                 </tbody>
             </table>

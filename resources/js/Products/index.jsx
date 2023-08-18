@@ -18,7 +18,7 @@ export default function Products() {
                 <h2>Quick Add!</h2>
                 <QuickAddProduct />
             </div>
-            {data.products.map((product) => (
+            {data.map((product) => (
                 <ProductItem key={product.id} {...product} />
             ))}
         </div>

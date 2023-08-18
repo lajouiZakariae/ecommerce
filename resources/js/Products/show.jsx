@@ -25,6 +25,19 @@ export default function Product() {
         <div className="card mt-2">
             <div className="card-body">
                 <h3 className="card-title">{product.title}</h3>
+                <div className="d-flex">
+                    {product.colors.map(({ name, hex }) => (
+                        <div
+                            className="me-2 border rounded"
+                            title={name}
+                            style={{
+                                backgroundColor: hex,
+                                width: "30px",
+                                height: "30px",
+                            }}
+                        ></div>
+                    ))}
+                </div>
             </div>
         </div>
     );

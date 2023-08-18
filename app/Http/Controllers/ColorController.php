@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Color;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,8 @@ class ColorController extends Controller
         $options = Validator::make(
             [
                 "limit" => $request->input("limit"),
-                "sortBy" => $request->input("sortBy")
+                "sortBy" => $request->input("sortBy"),
+                "exclude" => $request->input("exclude")
             ],
             [
                 "limit" => "numeric|max:10",
@@ -25,10 +27,7 @@ class ColorController extends Controller
             ]
         )->valid();
 
-        return [
-            "colors" => $user->colors($options),
-            "route" => route("colors")
-        ];
+        return $user->colors($options);
     }
 
     public function store(Request $request)

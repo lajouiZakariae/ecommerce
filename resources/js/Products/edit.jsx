@@ -2,6 +2,36 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
+function Colors({ exclude }) {
+    const url =
+        "/api/colors" +
+        exclude
+            .reduce((acc, item) => acc + `exclude[]=${item}&`, "?")
+            .slice(0, -1);
+
+    const { data, isError, isLoading } = useQuery("colors", () =>
+        axios.get(url).then(({ data }) => data)
+    );
+
+    console.log(data);
+
+    if (isError) {
+        return <span>Error...</span>;
+    }
+
+    if (isLoading) {
+        return <span>Loading...</span>;
+    }
+
+    return (
+        <>
+            {data.map(({ id, name }) => (
+                <div key={id}> {name}</div>
+            ))}
+        </>
+    );
+}
+
 export default function EditProduct() {
     const { id } = useParams();
 
@@ -73,6 +103,48 @@ export default function EditProduct() {
                         type="text"
                         defaultValue={product.quantity}
                     />
+                </div>
+            </div>
+            <div className="form-group mb-2 row">
+                <label htmlFor="title" className="col-2 col-form-label">
+                    Colors
+                </label>
+
+                <div className="col-10">
+                    <div className="d-flex">
+                        {product.colors.map(({ id, name, hex }) => (
+                            <div
+                                key={id}
+                                className="me-2 border rounded"
+                                title={name}
+                                style={{
+                                    backgroundColor: hex,
+                                    width: "30px",
+                                    height: "30px",
+                                }}
+                            ></div>
+                        ))}
+                        <div>
+                            <div
+                                className="me-2 border rounded text-secondary d-flex justify-content-center align-items-center"
+                                style={{
+                                    backgroundColor: "",
+                                    width: "30px",
+                                    height: "30px",
+                                    fontSize: "20px",
+                                }}
+                            >
+                                +
+                            </div>
+                            <div>
+                                <Colors
+                                    exclude={product.colors.map(
+                                        (color) => color.id
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className="d-flex justify-content-end">

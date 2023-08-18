@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
@@ -45,10 +46,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function products(array $options)
+    public function products(array $options = [])
     {
-        return $this
-            ->hasMany(Product::class)
+        return $this->hasMany(Product::class)
             ->when(isset($options["limit"]), function (Builder $query) use ($options) {
                 $query->take($options["limit"]);
             })
@@ -59,18 +59,28 @@ class User extends Authenticatable
             ->get(["title", "price", "id"]);
     }
 
-    public function colors(array $options)
+    public function product(int $id): Product|null
+    {
+        return $this
+            ->hasMany(Product::class)
+            ->find($id, ["id", "title", "description", "cost", "price", "quantity"]);
+    }
+
+    public function colors(array $options, array $columns = ["name", "hex", "id"])
     {
         return $this
             ->hasMany(Color::class)
             ->when(isset($options["sortBy"]), function (Builder $query) use ($options) {
                 $query->orderBy($options["sortBy"]);
             })
+            ->when(isset($options["exclude"]), function (Builder $query) use ($options) {
+                $query->whereNotIn("id", $options["exclude"]);
+            })
             ->when(isset($options["limit"]), function (Builder $query) use ($options) {
                 $query->take($options["limit"]);
 
             })
-            ->get(["name", "hex", "id"]);
+            ->get($columns);
     }
 
     public function defaultCategoryId()

@@ -5,7 +5,9 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\ColorProduct;
 use App\Models\Product;
+use App\Models\ProductColors;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -37,6 +39,13 @@ class DatabaseSeeder extends Seeder
         Category::factory(9)->create();
 
         Product::factory(15)->create();
+
+        ColorProduct::insert(["color_id" => 1, "product_id" => 1]);
+        ColorProduct::insert(["color_id" => 2, "product_id" => 1]);
+        ColorProduct::insert(["color_id" => 3, "product_id" => 1]);
+        ColorProduct::insert(["color_id" => 1, "product_id" => 2]);
+        ColorProduct::insert(["color_id" => 2, "product_id" => 2]);
+        ColorProduct::insert(["color_id" => 3, "product_id" => 2]);
 
     }
 }
