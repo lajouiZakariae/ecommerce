@@ -2,7 +2,21 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-function Colors({ exclude }) {
+function ColorBox({ hex, name, className }) {
+    return (
+        <div
+            className={className + " border rounded"}
+            title={name}
+            style={{
+                backgroundColor: hex,
+                width: "30px",
+                height: "30px",
+            }}
+        ></div>
+    );
+}
+
+function ColorSelect({ exclude }) {
     const url =
         "/api/colors" +
         exclude
@@ -25,8 +39,14 @@ function Colors({ exclude }) {
 
     return (
         <>
-            {data.map(({ id, name }) => (
-                <div key={id}> {name}</div>
+            {data.map(({ id, name, hex }) => (
+                <ColorBox
+                    key={id}
+                    name={name}
+                    hex={hex}
+                    className={"mb-1"}
+                    onClick={onClick}
+                />
             ))}
         </>
     );
@@ -113,20 +133,16 @@ export default function EditProduct() {
                 <div className="col-10">
                     <div className="d-flex">
                         {product.colors.map(({ id, name, hex }) => (
-                            <div
+                            <ColorBox
                                 key={id}
-                                className="me-2 border rounded"
-                                title={name}
-                                style={{
-                                    backgroundColor: hex,
-                                    width: "30px",
-                                    height: "30px",
-                                }}
-                            ></div>
+                                name={name}
+                                hex={hex}
+                                className="me-2"
+                            />
                         ))}
-                        <div>
+                        <div className="position-relative" style={{}}>
                             <div
-                                className="me-2 border rounded text-secondary d-flex justify-content-center align-items-center"
+                                className="me-2 mb-1 border rounded text-secondary d-flex justify-content-center align-items-center"
                                 style={{
                                     backgroundColor: "",
                                     width: "30px",
@@ -136,8 +152,12 @@ export default function EditProduct() {
                             >
                                 +
                             </div>
-                            <div>
-                                <Colors
+
+                            <div
+                                className="position-absolute d-flex flex-wrap border rounded p-1"
+                                style={{ top: "100%", width: "100px" }}
+                            >
+                                <ColorSelect
                                     exclude={product.colors.map(
                                         (color) => color.id
                                     )}
