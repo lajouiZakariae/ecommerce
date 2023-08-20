@@ -11,8 +11,10 @@ class Color extends Model
 
     public $timestamps = false;
 
+    protected $hidden = ["pivot"];
+
     public function products()
     {
-        return $this->belongsToMany(Product::class, "color_product")->get();
+        return $this->belongsToMany(Product::class, "color_product");
     }
 }

@@ -48,22 +48,7 @@ class User extends Authenticatable
 
     public function products(array $options = [])
     {
-        return $this->hasMany(Product::class)
-            ->when(isset($options["limit"]), function (Builder $query) use ($options) {
-                $query->take($options["limit"]);
-            })
-            ->when(isset($options["sortBy"]), function (Builder $query) use ($options) {
-                $query->orderBy($options["sortBy"]);
-            })
-            ->orderBy("id", "desc")
-            ->get(["title", "price", "id"]);
-    }
-
-    public function product(int $id): Product|null
-    {
-        return $this
-            ->hasMany(Product::class)
-            ->find($id, ["id", "title", "description", "cost", "price", "quantity"]);
+        return $this->hasMany(Product::class);
     }
 
     public function colors(array $options, array $columns = ["name", "hex", "id"])
@@ -81,6 +66,11 @@ class User extends Authenticatable
 
             })
             ->get($columns);
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
     }
 
     public function defaultCategoryId()

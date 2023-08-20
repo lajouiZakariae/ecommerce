@@ -1,16 +1,20 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import Input from "../Components/Input";
 
 export default function QuickAddProduct() {
+    const { id } = useParams();
     const queryClient = useQueryClient();
 
-    const { mutate } = useMutation(
+    const { mutate, isError, error } = useMutation(
         async (ev) => {
             ev.preventDefault();
-            const { data } = await axios.post(
-                "/api/products",
-                new FormData(ev.target)
-            );
+            const formData = new FormData(ev.target);
+            console.log(id);
+            if (id) formData.append("category_id", id);
+
+            const { data } = await axios.post("/api/products", formData);
             return data;
         },
         {
@@ -18,18 +22,17 @@ export default function QuickAddProduct() {
                 created ? queryClient.invalidateQueries("products") : null,
         }
     );
+
     return (
         <form className="row" onSubmit={mutate}>
-            <div className="col-10 pe-0">
-                <input
-                    type="text"
-                    name="title"
-                    className="form-control"
-                    placeholder="Title"
-                />
+            <div className="flex mt-2">
+                <Input type="text" name="title" placeholder="Title" />
+                <button className="ms-2 p-2 bg-slate-950 text-white rounded-lg px-6 hover:bg-slate-800 transition">
+                    Add
+                </button>
             </div>
-            <div className="col-2">
-                <button className="btn btn-primary w-100">Add</button>
+            <div className="text-red-600">
+                {isError ? error.response.data.message : null}
             </div>
         </form>
     );

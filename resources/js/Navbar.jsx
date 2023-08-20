@@ -1,30 +1,33 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+export function NavBarLink({ href, text }) {
+    const { pathname } = useLocation();
+    const isCurrentRoute = pathname === href;
+    return (
+        <Link
+            to={href}
+            className={`w-full px-1 py-2 font-semibold text-center rounded-md mb-2 transition inline-block ${
+                isCurrentRoute
+                    ? "text-cyan-600"
+                    : "text-gray-50 hover:text-cyan-500"
+            }`}
+        >
+            {text}
+        </Link>
+    );
+}
 
 export default function Navbar() {
     return (
-        <ul className="nav flex-column text-center">
-            <li className="nav-item">
-                <Link to={"/products"} className="nav-link active">
-                    Products
-                </Link>
+        <ul className="text-white p-2">
+            <li>
+                <NavBarLink text={"Products"} href={"/products"} />
             </li>
-
-            <li className="nav-item">
-                <Link to={"/colors"} className="nav-link active">
-                    Colors
-                </Link>
+            <li>
+                <NavBarLink text={"Colors"} href={"/colors"} />
             </li>
-
-            <li className="nav-item">
-                <a className="nav-link" href="#">
-                    Link
-                </a>
-            </li>
-
-            <li className="nav-item">
-                <a className="nav-link disabled" href="#">
-                    Disabled
-                </a>
+            <li>
+                <NavBarLink text={"Media"} href={"/media"} />
             </li>
         </ul>
     );

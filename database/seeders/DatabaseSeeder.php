@@ -6,6 +6,8 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\ColorProduct;
+use App\Models\Media;
+use App\Models\MediaProduct;
 use App\Models\Product;
 use App\Models\ProductColors;
 use Illuminate\Database\Seeder;
@@ -28,8 +30,6 @@ class DatabaseSeeder extends Seeder
 
         $user->save();
 
-        Color::factory(10)->create();
-
         Category::factory()->create([
             "name" => "Uncatogerized",
             "slug" => "uncatogerized",
@@ -40,12 +40,12 @@ class DatabaseSeeder extends Seeder
 
         Product::factory(15)->create();
 
-        ColorProduct::insert(["color_id" => 1, "product_id" => 1]);
-        ColorProduct::insert(["color_id" => 2, "product_id" => 1]);
-        ColorProduct::insert(["color_id" => 3, "product_id" => 1]);
-        ColorProduct::insert(["color_id" => 1, "product_id" => 2]);
-        ColorProduct::insert(["color_id" => 2, "product_id" => 2]);
-        ColorProduct::insert(["color_id" => 3, "product_id" => 2]);
+        Media::factory(15)->create();
+
+        MediaProduct::insert(["product_id" => 1, "media_id" => 1, "color_id" => 1]);
+        MediaProduct::insert(["product_id" => 1, "media_id" => 2, "color_id" => 2]);
+
+        Color::factory(10)->create();
 
     }
 }
