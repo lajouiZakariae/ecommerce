@@ -34,9 +34,9 @@ export default function Product() {
                 </p>
                 Available Colors:
                 <div className="d-flex">
-                    {product.colors.map((color) => (
+                    {/* {product.colors.map((color) => (
                         <ColorBox key={color.id} {...color} />
-                    ))}
+                    ))} */}
                 </div>
             </div>
         </div>

@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Color;
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('media', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-
-            $table->integer("order")->default(0);
-            $table->string("path");
-            $table->foreignIdFor(User::class);
+        Schema::table("products", function (Blueprint $table) {
+            $table
+                ->foreign("category_slug")
+                ->references("slug")
+                ->on("categories");
         });
     }
 
@@ -27,6 +23,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('media');
+        Schema::table("products", function (Blueprint $table) {
+            $table->dropForeign("category_slug");
+        });
     }
 };

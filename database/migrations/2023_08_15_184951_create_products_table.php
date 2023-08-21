@@ -26,7 +26,9 @@ return new class extends Migration {
             // $table->enum("rating", [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
 
             $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Category::class);
+
+            $table->string("category_slug")->unique();
+
         });
     }
 

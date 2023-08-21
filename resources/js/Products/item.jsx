@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { ColorBox } from "./edit";
 
-export default function ProductItem({ id, title, price, colors }) {
+export default function ProductItem({ id, title, price, colors, media }) {
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation(() => axios.delete(`/api/products/${id}`), {
@@ -13,7 +13,7 @@ export default function ProductItem({ id, title, price, colors }) {
         <div className="group relative">
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img
-                    // src={product.imageSrc}
+                    src={media[0]?.path}
                     // alt={product.imageAlt}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />

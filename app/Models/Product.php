@@ -14,15 +14,21 @@ class Product extends Model
 
     protected $fillable = ["title", "slug", "cost", "quantity", "price"];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, "category_slug", "slug");
+    }
+
     public function colors(): BelongsToMany
     {
         return $this->belongsToMany(Color::class);
     }
 
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
 
     public function media(): BelongsToMany
     {

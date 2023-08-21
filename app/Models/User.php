@@ -46,34 +46,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function products(array $options = [])
-    {
-        return $this->hasMany(Product::class);
-    }
-
-    public function colors(array $options, array $columns = ["name", "hex", "id"])
-    {
-        return $this
-            ->hasMany(Color::class)
-            ->when(isset($options["sortBy"]), function (Builder $query) use ($options) {
-                $query->orderBy($options["sortBy"]);
-            })
-            ->when(isset($options["exclude"]), function (Builder $query) use ($options) {
-                $query->whereNotIn("id", $options["exclude"]);
-            })
-            ->when(isset($options["limit"]), function (Builder $query) use ($options) {
-                $query->take($options["limit"]);
-
-            })
-            ->get($columns);
-    }
-
-    public function categories(): HasMany
-    {
-        return $this->hasMany(Category::class);
-    }
-
-    public function defaultCategoryId()
+    public function defaultCategoryId(): int|null
     {
         return $this
             ->hasMany(Category::class)

@@ -36,9 +36,27 @@ class DatabaseSeeder extends Seeder
             "user_id" => 1
         ]);
 
-        Category::factory(9)->create();
+        $result = Category::factory(9)->create();
 
-        Product::factory(15)->create();
+        $result->each(function (Category $category): void {
+            $title = fake()->words(5, true);
+            $price = fake()->numberBetween(20, 499);
+
+            Product::factory()->create([
+                "title" => $title,
+                "description" => "",
+                "slug" => \Illuminate\Support\Str::slug($title),
+                "cost" => $price - 10,
+                "price" => $price,
+                "quantity" => fake()->numberBetween(10, 100),
+                // "rating" => Arr::random([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 1)[0],
+                "user_id" => 1,
+                "category_slug" => $category->slug
+                // "category_id" => fake()->numberBetween(1, 10)
+
+            ]);
+
+        });
 
         Media::factory(15)->create();
 

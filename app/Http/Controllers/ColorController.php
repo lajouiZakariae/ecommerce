@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -27,7 +28,20 @@ class ColorController extends Controller
             ]
         )->valid();
 
-        return $user->colors($options);
+        // return $user->colors()
+        return Color::whereBelongsTo($user)
+            ->when(isset($options["sortBy"]), function (Builder $query) use ($options) {
+                $query->orderBy($options["sortBy"]);
+            })
+            ->when(isset($options["exclude"]), function (Builder $query) use ($options) {
+                $query->whereNotIn("id", $options["exclude"]);
+            })
+            ->when(isset($options["limit"]), function (Builder $query) use ($options) {
+                $query->take($options["limit"]);
+
+            })
+            ->get(["name", "hex", "id"]);
+        ;
     }
 
     public function store(Request $request)

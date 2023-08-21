@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class MediaController extends Controller
 {
@@ -12,15 +15,11 @@ class MediaController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $user = User::find(1);
+        return Media::whereBelongsTo($user)->all()->each(function ($media): Media {
+            $media->path = Storage::url($media->path);
+            return $media;
+        });
     }
 
     /**
@@ -28,7 +27,24 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = User::find(1);
+
+        $image = $request->file("image");
+
+        Validator::make($request->all(), [
+            "image" => ["required", "image"]
+        ])->validate();
+
+        $path = $image->store("media", "public");
+
+        $media = new Media([
+            "path" => $path,
+            "user_id" => $user->id,
+        ]);
+
+        $media->save();
+
+        return Storage::url($media->path);
     }
 
     /**

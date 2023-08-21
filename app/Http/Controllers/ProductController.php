@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repos\ProductRepo;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,9 +13,12 @@ use Validator;
 
 class ProductController extends Controller
 {
+    public function __construct(public ProductRepo $products)
+    {
+    }
+
     public function index(Request $request)
     {
-        $user = User::find(1);
 
         $options = Validator::make(
             [
@@ -27,25 +32,11 @@ class ProductController extends Controller
             ]
         )->valid();
 
-        return $user->products()
-            // ->with("media")
-            ->when(isset($options["limit"]), function (Builder $query) use ($options) {
-                $query->take($options["limit"]);
-            })
-            ->when(isset($options["sortBy"]), function (Builder $query) use ($options) {
-                $query->orderBy($options["sortBy"]);
-            })
-            ->when(isset($options["category"]), function (Builder $query) use ($options) {
-                $query->where("category_id", $options["category"]);
-            })
-            ->orderBy("id", "desc")
-            ->get(["title", "price", "id"]);
+        return $this->products->index($options);
     }
 
     public function store(Request $request)
     {
-        $user = User::find(1);
-
         $data = Validator::make($request->all(), [
             "title" => "required",
             "price" => "float",
@@ -54,29 +45,16 @@ class ProductController extends Controller
             "category_id" => "integer"
         ])->validate();
 
-        $data["user_id"] = $user->id;
-        $data["slug"] = \Illuminate\Support\Str::slug($data["title"]);
-
-        if (!isset($data["category_id"]))
-            $data["category_id"] = $user->defaultCategoryId();
-
-        return ["created" => Product::insert($data)];
+        $this->products->store($data);
     }
 
     public function show($id)
     {
-        $user = User::find(1);
-
-        return $user
-            ->products()
-            ->with("media:id,path")
-            ->with("category:id,name,slug")
-            ->find($id, ["id", "title", "slug", "price", "cost", "category_id"]);
+        return $this->products->find($id);
     }
 
     public function update(Request $request, Product $product)
     {
-        //
     }
 
     /**
