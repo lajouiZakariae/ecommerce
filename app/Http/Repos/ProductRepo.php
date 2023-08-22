@@ -2,6 +2,8 @@
 
 namespace App\Http\Repos;
 
+use App\Models\Color;
+use App\Models\Media;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,14 +11,14 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProductRepo
 {
-    public function index(array $options = []): Collection
+    public function index(array $options = [])
     {
         $user = User::find(1);
 
         /** @var Builder */
         $query = Product::whereBelongsTo($user);
 
-        return $query
+        $products = $query
             ->when(isset($options["limit"]), function (Builder $query) use ($options) {
                 $query->take($options["limit"]);
             })
@@ -26,9 +28,17 @@ class ProductRepo
             ->when(isset($options["category"]), function (Builder $query) use ($options) {
                 $query->where("category_slug", $options["category"]);
             })
-            ->with("media")
-            ->orderBy("id", "desc")
-            ->get(["title", "price", "id"]);
+            ->with("media:id,path")
+            ->orderByDesc("id")
+            ->get(["id", "title", "price"]);
+
+        $products->each(
+            fn(Product $product) => $product->media->each(
+                fn(Media $media) => $media->pivot->color
+            )
+        );
+
+        return $products;
     }
 
     public function store($data)

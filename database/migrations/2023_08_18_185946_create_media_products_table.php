@@ -14,9 +14,6 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('media_product', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-
             $table->foreignIdFor(Color::class);
             $table->foreignIdFor(Product::class);
             $table->foreignIdFor(Media::class);

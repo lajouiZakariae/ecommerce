@@ -24,15 +24,12 @@ class Product extends Model
         return $this->belongsTo(Category::class, "category_slug", "slug");
     }
 
-    public function colors(): BelongsToMany
-    {
-        return $this->belongsToMany(Color::class);
-    }
-
-
     public function media(): BelongsToMany
     {
-        return $this->belongsToMany(Media::class)->withPivot("color_id");
+        return $this
+            ->belongsToMany(Media::class)
+            ->withPivot(["color_id"])
+            ->using(MediaProduct::class);
     }
 
 }
