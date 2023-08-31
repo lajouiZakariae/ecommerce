@@ -31,7 +31,6 @@ class ProductController extends Controller
                 "sortBy" => Rule::in(["cost", "price", "quantity"]),
             ]
         )->valid();
-
         return $this->products->index($options);
     }
 

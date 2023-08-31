@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,16 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::post("login", function (Request $request) {
+    if (auth("web")->attempt([
+        "email" => $request->input("email"),
+        "password" => $request->input("password")
+    ])) {
+        $request->session()->regenerate();
+        return $request->user();
+    }
+});
 
 Route::view('/{path?}', 'welcome')
     ->where('path', '.*');

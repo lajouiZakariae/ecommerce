@@ -28,17 +28,12 @@ class ProductRepo
             ->when(isset($options["category"]), function (Builder $query) use ($options) {
                 $query->where("category_slug", $options["category"]);
             })
-            ->with("media:id,path")
-            ->orderByDesc("id")
+            ->with("media")
+            // ->orderByDesc("id")
             ->get(["id", "title", "price"]);
 
-        $products->each(
-            fn(Product $product) => $product->media->each(
-                fn(Media $media) => $media->pivot->color
-            )
-        );
-
         return $products;
+        // return $query->with("media")->get();
     }
 
     public function store($data)
@@ -61,10 +56,16 @@ class ProductRepo
 
         /** @var Builder */
         $query = Product::whereBelongsTo($user);
-        return $query
-            ->with("media:id,path")
+        $product = $query
+            ->with("mediaWithColor:id,path")
             ->with("category:id,name,slug")
             ->find($id, ["id", "title", "slug", "price", "cost", "category_slug"]);
+
+        $product->mediaWithColor->each(fn(Media $media) => $media->pivot->color);
+
+        $product->mediaWithColor = $product->mediaWithColor->groupBy("pivot.color_id");
+
+        return $product;
     }
 
 }

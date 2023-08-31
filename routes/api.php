@@ -23,17 +23,17 @@ use Illuminate\Support\Facades\Validator;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 
-Route::get("/user", fn() => User::find(1));
+    Route::apiResource("/products", ProductController::class);
 
-Route::apiResource("/products", ProductController::class);
+    Route::apiResource("/categories", CategoryController::class);
 
-Route::apiResource("/categories", CategoryController::class);
+    Route::apiResource("/colors", ColorController::class)->except("show");
 
-Route::apiResource("/colors", ColorController::class)->except("show");
-
-Route::get("/media", [MediaController::class, "index"]);
-Route::post("/media", [MediaController::class, "store"]);
+    Route::get("/media", [MediaController::class, "index"]);
+    Route::post("/media", [MediaController::class, "store"]);
+});
