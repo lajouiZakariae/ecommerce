@@ -15,11 +15,11 @@ class MediaController extends Controller
      */
     public function index()
     {
-        $user = User::find(1);
-        return Media::whereBelongsTo($user)->all()->each(function ($media): Media {
-            $media->path = Storage::url($media->path);
-            return $media;
-        });
+        return Media::all();
+        // ->each(function ($media): Media {
+        //     $media->path = Storage::url($media->path);
+        //     return $media;
+        // });
     }
 
     /**
@@ -27,19 +27,16 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::find(1);
-
         $image = $request->file("image");
 
         Validator::make($request->all(), [
             "image" => ["required", "image"]
         ])->validate();
 
-        $path = $image->store("media", "public");
+        $path = $image->store("products", "public");
 
         $media = new Media([
             "path" => $path,
-            "user_id" => $user->id,
         ]);
 
         $media->save();

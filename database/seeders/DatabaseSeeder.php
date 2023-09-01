@@ -10,8 +10,10 @@ use App\Models\Media;
 use App\Models\MediaProduct;
 use App\Models\Product;
 use App\Models\ProductColors;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,15 +22,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run() : void
     {
-        // \App\Models\User::factory(10)->create();
+        Role::insert(["name" => "admin"]);
+        Role::insert(["name" => "content creator"]);
+        Role::insert(["name" => "marketer"]);
 
-        $user = new \App\Models\User([
-            'name' => 'User One',
-            'email' => 'user@one.com',
-            'password' => Hash::make('password'),
+        \App\Models\User::factory()->createMany([
+            [
+                'name' => 'User One',
+                'email' => 'user@one.com',
+                'password' => Hash::make('password'),
+                "role_id" => \App\Enums\Role::ADMIN
+            ],
+            [
+                'name' => 'User Two',
+                'email' => 'user@two.com',
+                'password' => Hash::make('password'),
+                "role_id" => \App\Enums\Role::CONTENT_CREATOR
+            ],
+            [
+                'name' => 'User Three',
+                'email' => 'user@three.com',
+                'password' => Hash::make('password'),
+                "role_id" => \App\Enums\Role::MARKETER
+            ],
         ]);
-
-        $user->save();
 
         Category::factory()->create([
             "name" => "Uncatogerized",
@@ -36,36 +53,18 @@ class DatabaseSeeder extends Seeder
             "user_id" => 1
         ]);
 
-        $result = Category::factory(9)->create();
+        Category::factory(9)->create();
 
-        $result->each(function (Category $category) : void {
-            $title = fake()->words(5, true);
-            $price = fake()->numberBetween(20, 499);
+        Product::factory(30)->create();
 
-            Product::factory()->create([
-                "title" => $title,
-                "description" => "",
-                "slug" => \Illuminate\Support\Str::slug($title),
-                "cost" => $price - 10,
-                "price" => $price,
-                "quantity" => fake()->numberBetween(10, 100),
-                // "rating" => Arr::random([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 1)[0],
-                "user_id" => 1,
-                "category_slug" => $category->slug
-                // "category_id" => fake()->numberBetween(1, 10)
+        Media::insert(["path" => Storage::url("products/default.jpg")]);
+        Media::insert(["path" => Storage::url("products/default.svg")]);
 
-            ]);
+        MediaProduct::insert(["product_id" => 1, "media_id" => 1]);
+        MediaProduct::insert(["product_id" => 1, "media_id" => 2]);
+        MediaProduct::insert(["product_id" => 1, "media_id" => 1]);
+        MediaProduct::insert(["product_id" => 1, "media_id" => 2]);
 
-        });
-
-        Media::factory(15)->create();
-
-        MediaProduct::insert(["product_id" => 1, "media_id" => 1, "color_id" => 1]);
-        MediaProduct::insert(["product_id" => 1, "media_id" => 2, "color_id" => 1]);
-        MediaProduct::insert(["product_id" => 1, "media_id" => 3, "color_id" => 2]);
-        MediaProduct::insert(["product_id" => 1, "media_id" => 4, "color_id" => 2]);
-
-        Color::factory(10)->create();
 
     }
 }

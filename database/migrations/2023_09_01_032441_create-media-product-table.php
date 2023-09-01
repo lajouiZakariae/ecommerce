@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Color;
 use App\Models\Media;
 use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
@@ -11,10 +10,10 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up() : void
     {
-        Schema::create('media_product', function (Blueprint $table) {
-            $table->foreignIdFor(Color::class);
+        Schema::create("media_product", function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Product::class);
             $table->foreignIdFor(Media::class);
         });
@@ -23,8 +22,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down() : void
     {
-        Schema::dropIfExists('media_product');
+        //
     }
 };

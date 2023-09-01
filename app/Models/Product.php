@@ -4,39 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\PendingHasThroughRelationship;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\Concerns\InteractsWithPivotTable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Ramsey\Uuid\Exception\BuilderNotFoundException;
 
 class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["title", "slug", "cost", "quantity", "price"];
+    protected $fillable = ["title", "slug", "cost", "quantity", "price", "category_id"];
 
-    public function user(): BelongsTo
+    protected $perPage = 10;
+
+    // public function user(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
+
+    public function category() : BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Category::class);
     }
 
-    public function category(): BelongsTo
+    public function media() : HasMany
     {
-        return $this->belongsTo(Category::class, "category_slug", "slug");
+        return $this->hasMany(Media::class);
     }
-
-    public function media()
-    {
-        return $this
-            ->belongsToMany(Media::class)
-            ->using(MediaProduct::class);
-    }
-
-    public function mediaWithColor()
-    {
-        return $this
-            ->media()
-            ->withPivot("color_id");
-    }
-
 }

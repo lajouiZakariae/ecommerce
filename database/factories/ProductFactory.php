@@ -16,7 +16,7 @@ class ProductFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    public function definition() : array
     {
         $title = fake()->words(5, true);
         $price = fake()->numberBetween(20, 499);
@@ -29,8 +29,8 @@ class ProductFactory extends Factory
             "price" => $price,
             "quantity" => fake()->numberBetween(10, 100),
             // "rating" => Arr::random([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 1)[0],
-            "user_id" => 1,
-            // "category_id" => fake()->numberBetween(1, 10)
+            // "user_id" => 1,
+            "category_id" => fake()->numberBetween(1, 10)
         ];
     }
 }

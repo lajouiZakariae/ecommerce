@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Media>
@@ -14,11 +16,10 @@ class MediaFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    public function definition() : array
     {
         return [
-            "user_id" => 1,
-            "path" => "/storage/media/default.svg",
+            "path" => Storage::url(Arr::random(["products/default.jpg", "products/default.svg"], 1)[0]),
         ];
     }
 }

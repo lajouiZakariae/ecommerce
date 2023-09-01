@@ -11,7 +11,7 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up() : void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
@@ -25,9 +25,9 @@ return new class extends Migration {
             $table->integer("quantity")->nullable();
             // $table->enum("rating", [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
 
-            $table->foreignIdFor(User::class);
+            // $table->foreignIdFor(User::class);
+            $table->foreignIdFor(Category::class);
 
-            $table->string("category_slug")->unique();
 
         });
     }
@@ -35,7 +35,7 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down() : void
     {
         Schema::dropIfExists('products');
     }

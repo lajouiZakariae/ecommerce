@@ -31,20 +31,27 @@ class ProductController extends Controller
                 "sortBy" => Rule::in(["cost", "price", "quantity"]),
             ]
         )->valid();
+
         return $this->products->index($options);
     }
 
     public function store(Request $request)
     {
-        $data = Validator::make($request->all(), [
+        $request->merge(["slug" => str()->slug($request->input("title"))]);
+
+        $data = $request->validate([
             "title" => "required",
-            "price" => "float",
-            "cost" => "float",
+            "slug" => ["required", "unique:products"],
+            "price" => "numeric",
+            "cost" => "numeric",
             "quantity" => "integer",
             "category_id" => "integer"
-        ])->validate();
+        ]);
 
-        $this->products->store($data);
+        return "Yes You Can";
+        return response()
+            ->make($this->products->store($data), 201)
+            ->header("Location", route("products.index"));
     }
 
     public function show($id)

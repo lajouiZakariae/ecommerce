@@ -28,7 +28,29 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::apiResource("/products", ProductController::class);
+
+    Route::controller(ProductController::class)->group(function () {
+
+        Route::get("/products", "index");
+
+        Route::get("/products/{product}", "show");
+
+        Route::middleware("can:products.alter")->group(function () {
+            Route::post("/products", "store");
+
+            Route::put("/products/{product}", "update");
+
+            Route::delete("/products/{product}", "destroy");
+        });
+
+    })->whereNumber("product");
+
+    Route::controller(Media::class)->group(function () {
+        Route::get("media", "index");
+
+        Route::post("media", "store")->can("media.create");
+
+    });
 
     Route::apiResource("/categories", CategoryController::class);
 
