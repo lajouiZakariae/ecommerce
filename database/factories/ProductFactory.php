@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -30,7 +31,8 @@ class ProductFactory extends Factory
             "quantity" => fake()->numberBetween(10, 100),
             // "rating" => Arr::random([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 1)[0],
             // "user_id" => 1,
-            "category_id" => fake()->numberBetween(1, 10)
+            "category_id" => fake()->numberBetween(1, 10),
+            "thumbnail" => 1
         ];
     }
 }

@@ -12,7 +12,8 @@ class Media extends Model
 
     protected $fillable = ["path", "color_id"];
 
-    protected $hidden = [];
+    // protected $hidden = ["pivot"];
+
     public function products() : BelongsToMany
     {
         return $this->belongsToMany(Product::class);

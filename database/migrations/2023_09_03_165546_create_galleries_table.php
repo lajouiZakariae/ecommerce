@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +11,12 @@ return new class extends Migration {
      */
     public function up() : void
     {
-        Schema::create('colors', function (Blueprint $table) {
+        Schema::create('galleries', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
             $table->string("name");
-            $table->string("hex", 7);
+
+            $table->foreignIdFor(User::class);
         });
     }
 
@@ -23,6 +25,6 @@ return new class extends Migration {
      */
     public function down() : void
     {
-        Schema::dropIfExists('colors');
+        Schema::dropIfExists('galleries');
     }
 };

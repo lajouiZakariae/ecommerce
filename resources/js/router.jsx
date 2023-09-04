@@ -1,14 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "./Login";
-import Products from "./Products";
-import Product from "./Products/show";
-import EditProduct from "./Products/edit";
-import AddProduct from "./Products/Add";
-import Colors from "./colors";
-import Media from "./media";
-import Layout from "./Layout";
+import Products from "./routes/Products";
+import Product from "./routes/Products/show";
+import EditProduct from "./routes/Products/edit";
+import AddProduct from "./routes/Products/Add";
+import Colors from "./routes/colors";
+import Media from "./routes/media";
+import Layout from "./Layouts/Dashboard";
+import AuthLayout from "./Layouts/AuthLayout";
 
 export default createBrowserRouter([
+    {
+        path: "/dashboard/login",
+        element: <AuthLayout />,
+        children: [{ index: true, Component: Login }],
+    },
     {
         path: "/dashboard",
         element: <Layout />,

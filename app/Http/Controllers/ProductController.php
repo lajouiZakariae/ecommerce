@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repos\ProductRepo;
+use App\Http\Requests\ProductPostRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
@@ -19,7 +21,6 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-
         $options = Validator::make(
             [
                 "limit" => $request->input("limit"),
@@ -28,46 +29,50 @@ class ProductController extends Controller
             ],
             [
                 "limit" => "numeric|max:10",
-                "sortBy" => Rule::in(["cost", "price", "quantity"]),
+                "sortBy" => Rule::in(["cost", "price", "quantity", "latest", "oldest"]),
             ]
         )->valid();
 
-        return $this->products->index($options);
+        return ProductResource::collection($this->products->index($options));
     }
 
-    public function store(Request $request)
+    public function store(ProductPostRequest $request)
     {
-        $request->merge(["slug" => str()->slug($request->input("title"))]);
+        $data = $request->validated();
 
-        $data = $request->validate([
-            "title" => "required",
-            "slug" => ["required", "unique:products"],
-            "price" => "numeric",
-            "cost" => "numeric",
-            "quantity" => "integer",
-            "category_id" => "integer"
-        ]);
+        $product = new Product($data);
 
-        return "Yes You Can";
+        $product->save();
+
         return response()
-            ->make($this->products->store($data), 201)
-            ->header("Location", route("products.index"));
+            ->make($product, 201)
+            ->header("Location", route("products.show", ["product" => $product->id]));
     }
 
     public function show($id)
     {
-        return $this->products->find($id);
+        $product = $this->products->find($id);
+
+        return $product
+            ? new ProductResource($product)
+            : response()->make("", 404);
+        ;
     }
 
-    public function update(Request $request, Product $product)
+    public function update(ProductPostRequest $request, int $productId)
     {
+        $data = $request->validated();
+
+        return response()
+            ->make("", $this->products->update($productId, $data) ? 204 : 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($productId)
     {
-        return ["deleted" => $product->delete()];
+        return response()
+            ->make("", $this->products->delete($productId) ? 204 : 404);
     }
 }

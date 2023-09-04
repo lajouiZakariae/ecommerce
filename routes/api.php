@@ -4,10 +4,13 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProductController;
+use App\Http\Resources\ProductResource;
 use App\Models\Color;
 use App\Models\Media;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Benchmark;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -28,34 +31,60 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::group([
+        "prefix" => "products",
+        "name" => "products.",
+        "controller" => ProductController::class
+    ], function () {
 
-    Route::controller(ProductController::class)->group(function () {
+        Route::get("/", "index")->name("index");
 
-        Route::get("/products", "index");
-
-        Route::get("/products/{product}", "show");
+        // Route::get("/{product}", "show")->name("show");
 
         Route::middleware("can:products.alter")->group(function () {
-            Route::post("/products", "store");
 
-            Route::put("/products/{product}", "update");
+            Route::post("/", "store")->name("create");
 
-            Route::delete("/products/{product}", "destroy");
+            Route::put("/{product}", "update")->name("update");
+
+            Route::delete("/{product}", "destroy")->name("delete");
         });
-
     })->whereNumber("product");
 
-    Route::controller(Media::class)->group(function () {
+    Route::group([
+        "prefix" => "categories",
+        "controller" => CategoryController::class
+    ], function () {
+        Route::get("/{category}/products", "products");
+
+        Route::post("/{category}/products", "storeProduct");
+
+        Route::apiResource("/", CategoryController::class);
+    });
+
+    Route::controller(ColorController::class)->group(function () {
+        Route::get("/colors", "index");
+    });
+
+    Route::controller(MediaController::class)->group(function () {
         Route::get("media", "index");
 
         Route::post("media", "store")->can("media.create");
-
     });
 
-    Route::apiResource("/categories", CategoryController::class);
+    // Testing
+    Route::get("/products/{product}", function (Product $product) {
 
-    Route::apiResource("/colors", ColorController::class)->except("show");
+        $product->load([
+            "category:id,name,slug",
+            "HasColorMedias" => [
+                "color:id,hex",
+                "media:id,path,has_media_color_id"
+            ]
+        ]);
 
-    Route::get("/media", [MediaController::class, "index"]);
-    Route::post("/media", [MediaController::class, "store"]);
+        return [
+            new ProductResource($product),
+        ];
+    });
 });

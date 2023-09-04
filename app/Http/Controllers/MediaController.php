@@ -15,7 +15,7 @@ class MediaController extends Controller
      */
     public function index()
     {
-        return Media::all();
+        return Media::all(["id", "path"]);
         // ->each(function ($media): Media {
         //     $media->path = Storage::url($media->path);
         //     return $media;

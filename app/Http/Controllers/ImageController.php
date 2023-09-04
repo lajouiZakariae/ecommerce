@@ -2,23 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductMedia;
+use App\Models\Image;
 use Illuminate\Http\Request;
 
-class ProductMediaController extends Controller
+class ImageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
     {
         //
     }
@@ -34,15 +26,7 @@ class ProductMediaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductMedia $productMedia)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProductMedia $productMedia)
+    public function show(Image $image)
     {
         //
     }
@@ -50,7 +34,7 @@ class ProductMediaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductMedia $productMedia)
+    public function update(Request $request, Image $image)
     {
         //
     }
@@ -58,7 +42,7 @@ class ProductMediaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductMedia $productMedia)
+    public function destroy(Image $image)
     {
         //
     }

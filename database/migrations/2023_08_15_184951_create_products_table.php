@@ -23,11 +23,11 @@ return new class extends Migration {
             $table->float("cost")->nullable();
             $table->float("price")->nullable();
             $table->integer("quantity")->nullable();
+            // $table->integer("quantity")->nullable();
             // $table->enum("rating", [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
 
             // $table->foreignIdFor(User::class);
             $table->foreignIdFor(Category::class);
-
 
         });
     }

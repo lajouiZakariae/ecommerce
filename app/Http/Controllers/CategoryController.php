@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductPostRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -13,17 +17,21 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $user = User::find(1);
-        return $user->categories;
+        return Category::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function products(Category $category)
     {
-        //
+        return ProductResource::collection($category->products);
     }
+
+    public function storeProduct(ProductPostRequest $request, Category $category)
+    {
+        $data = $request->validated();
+
+        return $category->products()->create($data);
+    }
+
 
     /**
      * Store a newly created resource in storage.

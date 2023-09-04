@@ -1,28 +1,28 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import Input from "../Components/Input";
+import Input from "../../Components/Input";
 
 export default function QuickAddProduct() {
-    const { id } = useParams();
+    // const { id } = useParams();
     const queryClient = useQueryClient();
 
     const { mutate, isError, error } = useMutation(
         async (ev) => {
             ev.preventDefault();
             const formData = new FormData(ev.target);
-            console.log(id);
-            if (id) formData.append("category_id", id);
-
-            const { data } = await axios.post("/api/products", formData);
-            return data;
+            // console.log(id);
+            // if (id) formData.append("category_id", id);
+            return await axios.post("/api/products", formData);
         },
         {
-            onSuccess: ({ created }) =>
-                created ? queryClient.invalidateQueries("products") : null,
+            onSuccess: ({ status }) =>
+                status === 201
+                    ? queryClient.invalidateQueries("products")
+                    : null,
         }
     );
-
+    console.log(error?.response.data);
     return (
         <form className="row" onSubmit={mutate}>
             <div className="flex mt-2">
@@ -32,7 +32,7 @@ export default function QuickAddProduct() {
                 </button>
             </div>
             <div className="text-red-600">
-                {isError ? error.response.data.message : null}
+                {isError ? Object.values(error.response.data.errors)[0] : null}
             </div>
         </form>
     );

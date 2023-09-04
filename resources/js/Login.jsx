@@ -1,30 +1,40 @@
 import { useEffect } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import userAtom from "./atoms/user";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
+
+async function doLogin(credentails) {
+    const response = await axios.get("/sanctum/csrf-cookie");
+    return response.status === 204
+        ? await axios.post("/login", credentails)
+        : null;
+}
 
 export default function Login() {
-    const [user, setUser] = useAtom(userAtom);
+    const setUser = useSetAtom(userAtom);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        axios.get("/sanctum/csrf-cookie").then((response) => {
-            console.log("CSRF: ", response);
-
-            axios
-                .post("/login", {
-                    email: "user@one.com",
-                    password: "password",
-                })
-                .then((resp) => {
-                    setUser(resp.data);
-                    console.log(resp);
-                });
-        });
-    }, []);
+    const { mutate } = useMutation((credentails) => doLogin(credentails), {
+        onSuccess: (data) => {
+            setUser(data);
+            return navigate("/dashboard/");
+        },
+    });
 
     return (
         <div>
-            <h2>Hello {user?.name}</h2>
+            <form
+                onSubmit={(ev) => {
+                    ev.preventDefault();
+                    mutate({
+                        email: "user@one.com",
+                        password: "password",
+                    });
+                }}
+            ></form>
+            <h2>Login</h2>
         </div>
     );
 }

@@ -4,24 +4,29 @@ import ProductItem from "./item";
 import QuickAddProduct from "./quickAdd";
 import { useParams } from "react-router-dom";
 
+const useProducts = () => {
+    return useQuery({
+        queryKey: ["products"],
+        queryFn: () =>
+            axios.get(`/api/products?sortBy=latest`).then(({ data }) => data),
+    });
+};
+
 export default function Products() {
     const { id } = useParams();
-    const { data: products, isLoading } = useQuery("products", () =>
-        axios
-            .get(`/api/products${id ? "?category=" + id : ""}`)
-            .then(({ data }) => data)
-    );
+    const { data: products, isLoading, isFetched, error } = useProducts();
 
-    if (isLoading) {
-        return <h2>loading...</h2>;
-    }
+    if (isLoading) return <h2>loading...</h2>;
 
+    if (error) return <h2 className="text-red-500">Error...</h2>;
+    // return console.log(products);
     return (
         <div>
             <div className="mb-2">
                 <h2 className="text-2xl font-bold text-gray-900 tracking-tighter">
                     Quick Add!
                 </h2>
+
                 <QuickAddProduct />
             </div>
             <div className="mx-auto">
