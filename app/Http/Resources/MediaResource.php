@@ -17,7 +17,6 @@ class MediaResource extends JsonResource
         return [
             "id" => $this->id,
             "path" => $this->path,
-            // "order" => $this->pivot->order
         ];
     }
 }

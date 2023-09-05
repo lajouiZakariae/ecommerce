@@ -10,11 +10,11 @@ class Media extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["path", "color_id"];
+    protected $fillable = ["path", "color_id", "has_color_media_id"];
 
     // protected $hidden = ["pivot"];
 
-    public function products() : BelongsToMany
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
     }

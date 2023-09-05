@@ -23,13 +23,13 @@ class ProductResource extends JsonResource
             "price" => $this->price,
             "cost" => $this->cost,
             "quantity" => $this->quantity,
-            "category" => $this->category,
-            "colors" => $this->HasColorMedias->map(function (HasColorMedia $HasColorMedia): Color {
-                $color = $HasColorMedia->color;
-                $color->media = MediaResource::collection($HasColorMedia->media);
+            "category" => $this->whenHas("category", $this->category),
+            "createdAt" => $this->created_at,
+            "colors" => $this->hasColorMedia->map(function (HasColorMedia $hasColorMedia): Color {
+                $color = $hasColorMedia->color;
+                $color->media = MediaResource::collection($hasColorMedia->media);
                 return $color;
             }),
-            // "colors" => $this->colors,
             // "media" => $this->whenHas("media", MediaResource::collection($this->media)),
             // "thumbnail" => $this->whenHas("thumbnail", $this->thumbnail),
         ];

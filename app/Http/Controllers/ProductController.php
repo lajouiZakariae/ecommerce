@@ -10,8 +10,8 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Validator;
 
 class ProductController extends Controller
 {
@@ -33,7 +33,7 @@ class ProductController extends Controller
             ]
         )->valid();
 
-        return ProductResource::collection($this->products->index($options));
+        return $this->products->index($options);
     }
 
     public function store(ProductPostRequest $request)
@@ -49,14 +49,20 @@ class ProductController extends Controller
             ->header("Location", route("products.show", ["product" => $product->id]));
     }
 
-    public function show($id)
+    public function show(Product $product)
     {
-        $product = $this->products->find($id);
+        // $product = $this->products->find();
+        $product = $product->load([
+            "category:id,name,slug",
+            "hasColorMedia" => [
+                "color:id,hex",
+                "media:id,path,has_color_media_id"
+            ]
+        ]);
 
-        return $product
-            ? new ProductResource($product)
-            : response()->make("", 404);
-        ;
+        return new ProductResource($product);
+        // ? new ProductResource($product)
+        // : response()->make("", 404);;
     }
 
     public function update(ProductPostRequest $request, int $productId)

@@ -50,26 +50,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    function role() : BelongsTo
+    function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }
 
-    public function defaultCategory() : HasOne
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function defaultCategory(): HasOne
     {
         return $this->hasOne(Category::class);
     }
 
-    // Test
-    public function galleries() : HasMany
+    public function products()
     {
-        return $this->hasMany(Gallery::class);
+        return $this->hasManyThrough(Product::class, Category::class);
     }
-
-    public function subGalleries() : HasManyThrough
-    {
-        return $this->hasManyThrough(SubGallery::class, Gallery::class);
-    }
-
-
 }

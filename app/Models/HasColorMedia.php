@@ -17,6 +17,7 @@ class HasColorMedia extends Model
     {
         return $this->belongsTo(Color::class);
     }
+
     public function media(): HasMany
     {
         return $this->hasMany(Media::class);

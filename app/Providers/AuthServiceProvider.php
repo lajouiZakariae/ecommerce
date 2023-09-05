@@ -22,9 +22,14 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register any authentication / authorization services.
      */
-    public function boot() : void
+    public function boot(): void
     {
-        auth()->loginUsingId(4);
+        auth()->loginUsingId(1);
+
+        Gate::define(
+            "categories.alter",
+            fn (User $user) => in_array($user->role->id, [Role::ADMIN, Role::CONTENT_CREATOR])
+        );
 
         Gate::define(
             "products.alter",

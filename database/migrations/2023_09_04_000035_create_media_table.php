@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("path");
 
             $table
-                ->foreignId("has_media_color_id")
+                ->foreignId("has_color_media_id")
                 ->nullable()
                 ->references("id")
                 ->on("has_color_media");

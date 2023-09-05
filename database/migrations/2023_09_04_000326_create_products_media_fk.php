@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->foreignIdFor(Media::class, "thumbnail");
+            $table->foreignIdFor(Media::class, "thumbnail")->nullable();
         });
     }
 

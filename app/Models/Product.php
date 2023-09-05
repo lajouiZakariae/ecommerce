@@ -31,7 +31,7 @@ class Product extends Model
         return $this->hasOne(Media::class, "id", "thumbnail");
     }
 
-    public function HasColorMedias()
+    public function hasColorMedia()
     {
         return $this->hasMany(HasColorMedia::class, "product_id");
     }

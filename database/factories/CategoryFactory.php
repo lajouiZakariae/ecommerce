@@ -21,7 +21,6 @@ class CategoryFactory extends Factory
         return [
             "name" => $name,
             "slug" => \Illuminate\Support\Str::slug($name),
-            "user_id" => 1
         ];
     }
 }
