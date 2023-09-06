@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('has_media', function (Blueprint $table) {
+        Schema::create('has_color_media', function (Blueprint $table) {
             $table->foreignIdFor(Media::class);
-            $table->foreignId("has_color_media_id")
+            $table->foreignId("has_color_id")
                 ->references("id")
-                ->on("has_color_media");
+                ->on("has_color");
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('has_media');
+        Schema::dropIfExists('has_color_media');
     }
 };

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-export function ColorBox({ hex, name, className }) {
+export function ColorBox({ hex, name, className, onClick }) {
     return (
         <div
             className={className + " border rounded"}
@@ -12,6 +12,7 @@ export function ColorBox({ hex, name, className }) {
                 width: "30px",
                 height: "30px",
             }}
+            onClick={onClick}
         ></div>
     );
 }

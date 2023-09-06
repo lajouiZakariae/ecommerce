@@ -42,6 +42,7 @@ class ProductController extends Controller
         $data = $request->validated();
 
         $product = new Product($data);
+        // Validate if user has the category included & include defaultCategory() if category not provided
 
         $product->save();
 
@@ -52,11 +53,7 @@ class ProductController extends Controller
 
     public function show($productId)
     {
-        $product = $this->products->find($productId);
-
-        return ($product);
-        // ? new ProductResource($product)
-        // : response()->make("", 404);;
+        return $this->products->find($productId) ?? abort(404);
     }
 
     public function update(ProductPostRequest $request, int $productId)
@@ -72,7 +69,6 @@ class ProductController extends Controller
      */
     public function destroy($productId)
     {
-        return response()
-            ->make("", $this->products->delete($productId) ? 204 : 404);
+        return $this->products->delete($productId) ? response()->noContent() : abort(404);
     }
 }

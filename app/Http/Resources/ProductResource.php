@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Color;
+use App\Models\HasColor;
 use App\Models\HasColorMedia;
 use App\Models\HasMedia;
 use Illuminate\Http\Request;
@@ -27,12 +28,12 @@ class ProductResource extends JsonResource
             "createdAt" => $this->created_at,
             "category" => $this->whenLoaded("category"),
             "thumbnail" => $this->whenLoaded("thumbnail"),
-            "colors" => $this->whenLoaded("hasColorMedia", function () {
-                return $this->hasColorMedia->map(function (HasColorMedia $hasColorMedia) {
-                    $color = $hasColorMedia->color;
+            "colors" => $this->whenLoaded("hasColor", function () {
+                return $this->hasColor->map(function (HasColor $hasColor) {
+                    $color = $hasColor->color;
 
-                    $color->media = MediaResource::collection($hasColorMedia->hasMedia->map(
-                        fn (HasMedia $hasMedia) => $hasMedia->media
+                    $color->media = MediaResource::collection($hasColor->hasColorMedia->map(
+                        fn (HasColorMedia $hasColorMedia) => $hasColorMedia->media
                     ));
 
                     return $color;

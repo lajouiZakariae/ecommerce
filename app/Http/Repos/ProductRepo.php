@@ -2,16 +2,11 @@
 
 namespace App\Http\Repos;
 
-use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
-use App\Models\Color;
-use App\Models\Media;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ProductRepo
 {
@@ -31,7 +26,7 @@ class ProductRepo
 
         $filteredProducts = $this->filters($productQuery, $options);
 
-        return ProductResource::collection($filteredProducts->get());
+        return ProductResource::collection($filteredProducts->paginate());
     }
 
     protected function filters(Builder|HasManyThrough $q, array $options): Builder|HasManyThrough
@@ -55,17 +50,17 @@ class ProductRepo
 
     public function find($productId)
     {
-        return new ProductResource(
-            $this->user->products()->with([
-                "category:id,name,slug",
+        $product = $this->user->products()->with([
+            "category:id,name,slug",
+            "hasColor" => [
+                "color:id,hex",
                 "hasColorMedia" => [
-                    "color:id,hex",
-                    "hasMedia" => [
-                        "media:id,path"
-                    ]
+                    "media:id,path"
                 ]
-            ])->find($productId)
-        );
+            ]
+        ])->find($productId);
+
+        return $product ? new ProductResource($product) : null;
     }
 
     public function store($data): Product
@@ -85,11 +80,11 @@ class ProductRepo
 
     function update(int $productId, array $data): bool
     {
-        return Product::whereId($productId)->update($data);
+        return $this->user->products()->where("products.id", $productId)->update($data);
     }
 
     function delete($productId): bool
     {
-        return Product::whereId($productId)->delete();
+        return $this->user->products()->where("products.id", $productId)->delete();
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\Media;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('media', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string("path");
-
-            $table->foreignIdFor(User::class);
+        Schema::create("media_product", function (Blueprint $table) {
+            $table->integer("order")->default(0);
+            $table->foreignIdFor(Product::class);
+            $table->foreignIdFor(Media::class);
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('media');
+        Schema::dropIfExists("media_product");
     }
 };

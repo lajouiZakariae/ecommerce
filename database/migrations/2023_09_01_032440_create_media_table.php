@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Color;
-use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('has_color_media', function (Blueprint $table) {
+        Schema::create('media', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Product::class);
-            $table->foreignIdFor(Color::class);
+            $table->timestamps();
+            $table->string("path");
+
+            $table->foreignIdFor(User::class);
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('has_color_media');
+        Schema::dropIfExists('media');
     }
 };

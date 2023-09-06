@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
+import Gallery from "../../Components/Gallery";
 
-const useProduct = (id) =>
-    useQuery({
+function useProduct(id) {
+    return useQuery({
         queryKey: ["products", id],
         queryFn: async ({ queryKey }) => {
             const { data } = await axios.get(`/api/products/${queryKey[1]}`);
@@ -11,6 +12,7 @@ const useProduct = (id) =>
         },
         refetchOnWindowFocus: false,
     });
+}
 
 function ColorBox({ hex }) {
     return <div className="h-9 w-9" style={{ backgroundColor: hex }}></div>;
@@ -42,9 +44,7 @@ export default function Product() {
                 </p>
                 Available Colors:
                 <div className="flex flex-wrap space-x-2">
-                    {product.colors.map((color) => (
-                        <ColorBox key={color.id} {...color} />
-                    ))}
+                    <Gallery colors={product.colors} />
                 </div>
             </div>
         </div>

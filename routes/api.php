@@ -4,16 +4,19 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProductController;
+use App\Http\Resources\MediaResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Color;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Benchmark;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Expr\FuncCall;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,5 +84,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("media", "index");
 
         Route::post("media", "store")->can("media.create");
+    });
+
+    Route::get("/test", function () {
+        return MediaResource::collection(Media::all());
     });
 });
