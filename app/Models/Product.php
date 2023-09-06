@@ -12,23 +12,23 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["title", "slug", "cost", "quantity", "price", "category_id"];
+    protected $fillable = ["title", "slug", "cost", "quantity", "price", "category_id", "thumbnail"];
 
     protected $perPage = 10;
 
-    // public function user(): BelongsTo
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function thumbnail(): HasOne
+    public function thumbnail(): BelongsTo
     {
-        return $this->hasOne(Media::class, "id", "thumbnail");
+        return $this->belongsTo(Media::class, "thumbnail_id", "id");
     }
 
     public function hasColorMedia()

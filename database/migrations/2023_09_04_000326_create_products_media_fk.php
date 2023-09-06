@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->foreignIdFor(Media::class, "thumbnail")->nullable();
+            $table->foreignIdFor(Media::class, "thumbnail_id")->nullable();
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropForeignIdFor(Media::class, "thumbnail");
+            $table->dropForeignIdFor(Media::class, "thumbnail_id");
         });
     }
 };

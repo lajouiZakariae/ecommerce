@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\HasColorMedia;
+use App\Models\HasMedia;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\Role;
@@ -53,25 +54,22 @@ class DatabaseSeeder extends Seeder
 
         $categories->each(fn (Category $category) => Product::factory(4)->for($category)->create());
 
-        Color::factory(4)->create();
+        Color::factory(4)->for($users[0])->create();
+
+        Media::factory(24)->for($users[0])->create();
 
         for ($i = 1; $i < 4; $i++) {
-            HasColorMedia::insert([
+            $hasColorMedia = HasColorMedia::create([
                 "product_id" => 1,
                 "color_id" => $i
             ]);
-        }
 
-        for ($i = 1; $i < 4; $i++) {
-
-            Media::insert([
-                "has_color_media_id" => $i,
-                "path" => fake()->image("storage/app/public/products", 500, 500, null, true)
-            ]);
-            Media::insert([
-                "has_color_media_id" => $i,
-                "path" => fake()->image("storage/app/public/products", 500, 500, null, true)
-            ]);
+            for ($j = 1; $j < 5; $j++) {
+                HasMedia::insert([
+                    "has_color_media_id" => $hasColorMedia->id,
+                    "media_id" => $j * $i
+                ]);
+            }
         }
     }
 }

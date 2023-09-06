@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
+
     public function __construct(public ProductRepo $products)
     {
     }
@@ -49,18 +50,11 @@ class ProductController extends Controller
             ->header("Location", route("products.show", ["product" => $product->id]));
     }
 
-    public function show(Product $product)
+    public function show($productId)
     {
-        // $product = $this->products->find();
-        $product = $product->load([
-            "category:id,name,slug",
-            "hasColorMedia" => [
-                "color:id,hex",
-                "media:id,path,has_color_media_id"
-            ]
-        ]);
+        $product = $this->products->find($productId);
 
-        return new ProductResource($product);
+        return ($product);
         // ? new ProductResource($product)
         // : response()->make("", 404);;
     }

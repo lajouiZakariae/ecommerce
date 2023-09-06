@@ -2,6 +2,7 @@
 
 namespace App\Http\Repos;
 
+use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Color;
 use App\Models\Media;
@@ -9,21 +10,31 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ProductRepo
 {
-    public function index(array $options = []): ResourceCollection
-    {
-        $filteredProducts = $this->filters(
-            Product::with(["colors", "category:id,name", "thumbnail:id,path"]),
-            $options
-        );
+    protected User $user;
 
-        return ProductResource::collection($filteredProducts->get(["id", "title", "thumbnail", "category_id", "price", "cost", "quantity"]));
+    public function __construct()
+    {
+        $this->user = auth()->user();
     }
 
-    protected function filters(Builder $q, array $options): Builder
+    public function index(array $options = [])
+    {
+        $productQuery = $this->user->products()->with([
+            "category:id,name",
+            "thumbnail:id,path"
+        ]);
+
+        $filteredProducts = $this->filters($productQuery, $options);
+
+        return ProductResource::collection($filteredProducts->get());
+    }
+
+    protected function filters(Builder|HasManyThrough $q, array $options): Builder|HasManyThrough
     {
         return $q->when(isset($options["limit"]), function (Builder $query) use ($options) {
             $query->take($options["limit"]);
@@ -42,16 +53,18 @@ class ProductRepo
             });
     }
 
-    public function find(Product $product): ProductResource
+    public function find($productId)
     {
         return new ProductResource(
-            $product->load([
+            $this->user->products()->with([
                 "category:id,name,slug",
-                "HasColorMedias" => [
+                "hasColorMedia" => [
                     "color:id,hex",
-                    "media:id,path,has_color_media_id"
+                    "hasMedia" => [
+                        "media:id,path"
+                    ]
                 ]
-            ])
+            ])->find($productId)
         );
     }
 

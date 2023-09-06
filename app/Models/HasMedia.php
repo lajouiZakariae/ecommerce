@@ -7,20 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class HasColorMedia extends Model
+class HasMedia extends Model
 {
     use HasFactory;
-
-    protected $table = "has_color_media";
     public $timestamps = false;
 
-    public function color(): BelongsTo
+    public function media(): BelongsTo
     {
-        return $this->belongsTo(Color::class);
-    }
-
-    public function hasMedia(): HasMany
-    {
-        return $this->hasMany(HasMedia::class, "has_color_media_id");
+        return $this->belongsTo(Media::class);
     }
 }

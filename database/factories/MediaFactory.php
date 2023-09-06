@@ -16,10 +16,11 @@ class MediaFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition() : array
+    public function definition(): array
     {
         return [
             "path" => Storage::url(Arr::random(["products/default.jpg", "products/default.svg"], 1)[0]),
+            // "path" => fake()->image("storage/app/public/products", 500, 500, null, true),
         ];
     }
 }
