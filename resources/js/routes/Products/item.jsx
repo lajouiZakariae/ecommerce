@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
-import { ColorBox } from "./edit";
+import defaultImage from "../../default.jpg";
 
 export default function ProductItem({ id, title, price, colors, thumbnail }) {
     const queryClient = useQueryClient();
@@ -14,7 +14,7 @@ export default function ProductItem({ id, title, price, colors, thumbnail }) {
         <div className="group relative">
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                 <img
-                    src={thumbnail?.path}
+                    src={thumbnail ? thumbnail.url : defaultImage}
                     // alt={product.imageAlt}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />

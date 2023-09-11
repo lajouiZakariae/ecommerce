@@ -1,16 +1,16 @@
-import axios from "axios";
-import { useQuery } from "react-query";
 import ProductItem from "./item";
 import QuickAddProduct from "./quickAdd";
 import useProducts from "../../queries/useProducts";
+import { useParams } from "react-router-dom";
 
 export default function Products() {
+    const { categoryId } = useParams();
     const { data: products, isLoading, isFetched, error } = useProducts();
 
     if (isLoading) return <h2>loading...</h2>;
 
     if (error) return <h2 className="text-red-500">Error...</h2>;
-    // return console.log(products);
+
     return (
         <div>
             <div className="mb-2">

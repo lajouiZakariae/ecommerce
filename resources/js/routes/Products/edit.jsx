@@ -5,7 +5,10 @@ import { useParams } from "react-router-dom";
 export function ColorBox({ hex, name, className, onClick }) {
     return (
         <div
-            className={className + " border rounded"}
+            className={
+                className +
+                " border rounded cursor-pointer hover:opacity-70 transition"
+            }
             title={name}
             style={{
                 backgroundColor: hex,

@@ -12,6 +12,13 @@ use Illuminate\Validation\Rule;
 
 class ColorController extends Controller
 {
+    protected User $user;
+
+    public function __construct()
+    {
+        $this->user = auth()->user();
+    }
+
     public function index(Request $request)
     {
         $user = User::find(1);
@@ -38,38 +45,39 @@ class ColorController extends Controller
             })
             ->when(isset($options["limit"]), function (Builder $query) use ($options) {
                 $query->take($options["limit"]);
-
             })
-            ->get(["name", "hex", "id"]);
-        ;
+            ->get(["name", "hex", "id"]);;
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            "name" => "required"
-        ]);
-
-        return true;
-    }
-
-    public function update(Request $request, Color $color)
     {
         $data = $request->validate([
             "name" => "required",
             "hex" => "required"
         ]);
 
-        $color->name = $data["name"];
-        $color->hex = $data["hex"];
-
-        $color->save();
-
-        return $color->name;
+        /** @var Color */
+        $color = $this->user->colors()->create($data);
+        return response()->make($color, 201);
     }
 
-    public function destroy(Color $color)
+    public function update(Request $request, $colorId)
     {
-        return ["deleted" => $color->delete()];
+        $data = $request->validate([
+            "name" => "required",
+            "hex" => "required"
+        ]);
+
+        /** @var Color */
+        $color = $this->user->colors()->whereId($colorId)->first();
+
+        abort_if(!$color, 404);
+
+        return $color->update($data) ? response()->make($color, 200) : null;
+    }
+
+    public function destroy($colorId)
+    {
+        return $this->user->colors()->whereId($colorId)->delete() ? abort(204) : abort(404);
     }
 }

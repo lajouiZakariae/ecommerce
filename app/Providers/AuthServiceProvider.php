@@ -35,5 +35,10 @@ class AuthServiceProvider extends ServiceProvider
             "products.alter",
             fn (User $user) => in_array($user->role->id, [Role::ADMIN, Role::CONTENT_CREATOR])
         );
+
+        Gate::define(
+            "colors.alter",
+            fn (User $user) => in_array($user->role->id, [Role::ADMIN, Role::CONTENT_CREATOR])
+        );
     }
 }

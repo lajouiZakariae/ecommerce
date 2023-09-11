@@ -52,7 +52,7 @@ class ProductRepo
     {
         $product = $this->user->products()->with([
             "category:id,name,slug",
-            "hasColor" => [
+            "hasColors" => [
                 "color:id,hex",
                 "hasColorMedia" => [
                     "media:id,path"
@@ -63,16 +63,14 @@ class ProductRepo
         return $product ? new ProductResource($product) : null;
     }
 
-    public function store($data): Product
+    public function create($data): Product
     {
-        /** @var User */
-        $user = auth()->user();
-        $data["slug"] = \Illuminate\Support\Str::slug($data["title"]);
-
-        if (!isset($data["category_id"]))
-            $data["category_id"] = $user->defaultCategory->id;
-
         $product = new Product($data);
+
+        if (!isset($product["category_id"])) {
+            $product["categori_id"] = auth()->user()->defaultCategory->id;
+        }
+
         $product->save();
 
         return $product;

@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -40,14 +41,11 @@ class ProductController extends Controller
     public function store(ProductPostRequest $request)
     {
         $data = $request->validated();
+        return [$data];
 
-        $product = new Product($data);
-        // Validate if user has the category included & include defaultCategory() if category not provided
+        $product = $this->products->create($data);
 
-        $product->save();
-
-        return response()
-            ->make($product, 201)
+        return response($product, Response::HTTP_CREATED)
             ->header("Location", route("products.show", ["product" => $product->id]));
     }
 

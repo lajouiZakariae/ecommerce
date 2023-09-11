@@ -14,6 +14,7 @@ class Color extends Model
     public $timestamps = false;
 
     protected $hidden = ["pivot"];
+    protected $fillable = ["name", "hex", "user_id"];
 
     public function user(): BelongsTo
     {

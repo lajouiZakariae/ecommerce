@@ -67,8 +67,7 @@ class CategoryController extends Controller
      */
     public function show($categoryId)
     {
-        $category = $this->user->categories()->whereId($categoryId)->first();
-        return $category ?? abort(404);
+        return $this->user->categories()->find($categoryId) ?? abort(404);
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,5 +25,9 @@ Route::post("login", function (Request $request) {
     }
 });
 
-Route::view('/{path?}', 'welcome')
+Route::view('/dashboard/{path?}', 'welcome')
     ->where('path', '.*');
+
+Route::get("/", function (): View {
+    return view("index");
+});

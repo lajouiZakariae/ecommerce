@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProductPostRequest extends FormRequest
 {
@@ -20,13 +21,19 @@ class ProductPostRequest extends FormRequest
 
     public function rules(): array
     {
+        /** @var \App\Models\User */
+        $user = auth()->user();
         return [
             "title" => "required",
             "slug" => ["required", "unique:products"],
-            "price" => "numeric",
-            "cost" => "numeric",
-            "quantity" => "integer",
-            "category_id" => "integer"
+            // "price" => ["numeric",],
+            // "cost" => ["numeric",],
+            // "quantity" => "integer",
+            "category_id" => [
+                "integer",
+                Rule::in($user->categories()->pluck("id"))
+            ],
+            "images.*" => ["image"]
         ];
     }
 

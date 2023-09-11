@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
 
         $categories->each(fn (Category $category) => Product::factory(4)->for($category)->create());
 
-        Color::factory(4)->for($users[0])->create();
+        Color::factory(15)->for($users[0])->create();
 
         // Media::factory(24)->for($users[0])->create();
         collect(Storage::disk("public")->files("products"))->each(function (string  $file) use ($users) {

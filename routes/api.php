@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group([
         "prefix" => "products",
-        "name" => "products.",
+        "as" => "products.",
         "controller" => ProductController::class
     ], function () {
         Route::get("/", "index")->name("index");
@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group([
         "prefix" => "categories",
+        "as" => "categories.",
         "controller" => CategoryController::class
     ], function () {
         Route::get("/", "index");
@@ -76,8 +77,20 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
-    Route::controller(ColorController::class)->group(function () {
-        Route::get("/colors", "index");
+    Route::group([
+        "controller" => ColorController::class,
+        "prefix" => "colors",
+        "as" => "colors."
+    ], function () {
+        Route::get("/", "index");
+
+        Route::middleware("can:colors.alter")->group(function (): void {
+            Route::post("/", "store");
+
+            Route::delete("/{color}", "destroy");
+
+            Route::put("/{color}", "update");
+        });
     });
 
     Route::controller(MediaController::class)->group(function () {
@@ -86,7 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("media", "store")->can("media.create");
     });
 
-    Route::get("/test", function () {
-        return MediaResource::collection(Media::all());
+    Route::get("/test", function (Request $request) {
+        return $request->getAcceptableContentTypes();
     });
 });

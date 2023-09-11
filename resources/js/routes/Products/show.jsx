@@ -32,6 +32,7 @@ export default function Product() {
     }
 
     console.log(product);
+
     return (
         <div className="card mt-2">
             <div className="card-body">

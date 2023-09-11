@@ -32,7 +32,7 @@ class Handler extends ExceptionHandler
         });
 
         $this->renderable(function (NotFoundHttpException $e, Request $request) {
-            if ($request->accepts("application/json")) {
+            if ($request->expectsJson()) {
                 return response()
                     ->make()
                     ->setStatusCode(404);

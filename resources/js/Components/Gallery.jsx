@@ -2,11 +2,14 @@ import { useState } from "react";
 import { ColorBox } from "../routes/Products/edit";
 
 export default function Gallery({ colors }) {
-    const [colorTab, setColorTab] = useState(colors[0].hex);
+    const [colorTab, setColorTab] = useState(
+        colors.length ? colors[0].hex : null
+    );
+
     return (
         <div>
-            <div className="flex">
-                {colors.map(({ hex, name }) => (
+            <div className="flex flex-wrap">
+                {colors.map(({ hex }) => (
                     <ColorBox
                         key={hex}
                         hex={hex}
@@ -14,7 +17,7 @@ export default function Gallery({ colors }) {
                     />
                 ))}
             </div>
-            <div className="flex">
+            <div className="flex flex-wrap">
                 {colors
                     .find((color) => color.hex === colorTab)
                     ?.media.map(({ id, url }) => (

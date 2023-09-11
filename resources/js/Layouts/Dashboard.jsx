@@ -5,6 +5,7 @@ import userAtom from "../atoms/user";
 import { useSetAtom } from "jotai";
 import axios from "axios";
 import { useQuery } from "react-query";
+import Controls from "../Components/Controls";
 
 export default function Layout() {
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function Layout() {
                 <Navbar />
             </div>
             <div className="ml-44 px-5">
+                <Controls />
                 <Outlet />
             </div>
         </div>

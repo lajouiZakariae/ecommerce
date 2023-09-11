@@ -2,17 +2,28 @@ import axios from "axios";
 import Color from "./item";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-function AddColorForm() {
+function useAddColor() {
     const queryClient = useQueryClient();
-    const { mutate, isError } = useMutation(
+    return useMutation(
         (ev) => {
             ev.preventDefault();
             return axios.post("/api/colors", new FormData(ev.target));
         },
         {
-            onSuccess: ({ data }) => console.log(data), //queryClient.invalidateQueries("colors"),
+            onSuccess: ({ data, status }) => {
+                if (status === 201) {
+                    queryClient.setQueryData("colors", (colors) => [
+                        ...colors,
+                        data,
+                    ]);
+                }
+            }, //queryClient.invalidateQueries("colors"),
         }
     );
+}
+
+function AddColorForm() {
+    const { mutate, isError } = useAddColor();
 
     return (
         <form className="row" onSubmit={mutate} method="post">
@@ -37,8 +48,10 @@ function AddColorForm() {
 }
 
 export default function Colors() {
-    const { data, isLoading, isError } = useQuery("colors", () =>
-        axios.get("/api/colors").then(({ data }) => data)
+    const { data, isLoading, isError, isFetching } = useQuery(
+        "colors",
+        () => axios.get("/api/colors").then(({ data }) => data),
+        { refetchOnWindowFocus: false }
     );
 
     if (isLoading) {
@@ -49,14 +62,18 @@ export default function Colors() {
         return <h2>Error</h2>;
     }
 
+    if (isFetching) {
+        console.log("Fetching Colors....");
+    }
+
     return (
         <div className="mt-2">
             <AddColorForm route={data.route} />
             <table className="table ">
                 <thead>
                     <tr>
-                        <th>Color Name</th>
-                        <th>Color Code</th>
+                        <th>Name</th>
+                        <th>Code</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

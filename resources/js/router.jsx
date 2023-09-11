@@ -18,7 +18,6 @@ export default createBrowserRouter([
     {
         path: "/dashboard",
         element: <Layout />,
-        errorElement: <h2>Not Found!</h2>,
         children: [
             {
                 path: "login",
@@ -45,12 +44,16 @@ export default createBrowserRouter([
                 Component: Colors,
             },
             {
-                path: "categories/:id",
+                path: "categories/:categoryId",
                 Component: Products,
             },
             {
                 path: "media",
                 Component: Media,
+            },
+            {
+                path: "*",
+                element: <h2>Not Found!</h2>,
             },
         ],
     },

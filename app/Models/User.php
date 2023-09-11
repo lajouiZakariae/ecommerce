@@ -60,6 +60,16 @@ class User extends Authenticatable
         return $this->hasMany(Category::class);
     }
 
+    public function colors(): HasMany
+    {
+        return $this->hasMany(Color::class);
+    }
+
+    public function media(): HasMany
+    {
+        return $this->hasMany(Media::class);
+    }
+
     public function defaultCategory(): HasOne
     {
         return $this->hasOne(Category::class);
