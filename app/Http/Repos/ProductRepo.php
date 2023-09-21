@@ -7,19 +7,15 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Facades\Auth;
 
 class ProductRepo
 {
     protected User $user;
 
-    public function __construct()
-    {
-        $this->user = auth()->user();
-    }
-
     public function index(array $options = [])
     {
-        $productQuery = $this->user->products()->with([
+        $productQuery = request()->user()->products()->with([
             "category:id,name",
             "thumbnail:id,path"
         ]);
@@ -50,10 +46,10 @@ class ProductRepo
 
     public function find($productId)
     {
-        $product = $this->user->products()->with([
+        $product = request()->user()->products()->with([
             "category:id,name,slug",
             "hasColors" => [
-                "color:id,hex",
+                "color",
                 "hasColorMedia" => [
                     "media:id,path"
                 ]
@@ -68,7 +64,7 @@ class ProductRepo
         $product = new Product($data);
 
         if (!isset($product["category_id"])) {
-            $product["categori_id"] = auth()->user()->defaultCategory->id;
+            $product["category_id"] = request()->user()->defaultCategory->id;
         }
 
         $product->save();
@@ -78,11 +74,11 @@ class ProductRepo
 
     function update(int $productId, array $data): bool
     {
-        return $this->user->products()->where("products.id", $productId)->update($data);
+        return request()->user()->products()->where("products.id", $productId)->update($data);
     }
 
     function delete($productId): bool
     {
-        return $this->user->products()->where("products.id", $productId)->delete();
+        return request()->user()->products()->where("products.id", $productId)->delete();
     }
 }

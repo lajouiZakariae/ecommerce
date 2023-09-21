@@ -60,6 +60,8 @@ class DatabaseSeeder extends Seeder
 
         Color::factory(15)->for($users[0])->create();
 
+        Color::destroy([11, 12, 13]);
+
         // Media::factory(24)->for($users[0])->create();
         collect(Storage::disk("public")->files("products"))->each(function (string  $file) use ($users) {
             Media::insert(["path" => ($file), "user_id" => $users[0]->id]);

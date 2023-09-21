@@ -15,18 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post("login", function (Request $request) {
-    if (auth("web")->attempt([
-        "email" => $request->input("email"),
-        "password" => $request->input("password")
-    ])) {
-        $request->session()->regenerate();
-        return $request->user();
-    }
-});
-
-Route::view('/dashboard/{path?}', 'welcome')
-    ->where('path', '.*');
 
 Route::get("/", function (): View {
     return view("index");

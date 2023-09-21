@@ -33,7 +33,7 @@ class ProductPostRequest extends FormRequest
                 "integer",
                 Rule::in($user->categories()->pluck("id"))
             ],
-            "images.*" => ["image"]
+            "images" => ["image"]
         ];
     }
 

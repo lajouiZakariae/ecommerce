@@ -28,14 +28,16 @@ class ProductResource extends JsonResource
             "thumbnail" => $this->whenLoaded("thumbnail", new MediaResource($this->thumbnail)),
             "colors" => $this->whenLoaded("hasColors", function () {
                 return $this->hasColors->map(function (HasColor $hasColor) {
-                    // dd($hasColor);
                     $color = $hasColor->color;
-                    $color->media = MediaResource::collection($hasColor->hasColorMedia->map(
-                        fn (HasColorMedia $hasColorMedia) => $hasColorMedia->media
-                    ));
+                    // dd($hasColor->color()->get());   
+                    if ($color) {
+                        $color->media = MediaResource::collection($hasColor->hasColorMedia->map(
+                            fn (HasColorMedia $hasColorMedia) => $hasColorMedia->media
+                        ));
+                    }
 
                     return $color;
-                });
+                })->filter();
             }),
         ];
     }

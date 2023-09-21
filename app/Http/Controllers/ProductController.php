@@ -21,13 +21,13 @@ class ProductController extends Controller
     {
     }
 
-    public function index(Request $request)
+    public function index()
     {
         $options = Validator::make(
             [
-                "limit" => $request->input("limit"),
-                "sortBy" => $request->input("sortBy"),
-                "category" => $request->input("category")
+                "limit" => request()->input("limit"),
+                "sortBy" => request()->input("sortBy"),
+                "category" => request()->input("category")
             ],
             [
                 "limit" => "numeric|max:10",
@@ -41,12 +41,11 @@ class ProductController extends Controller
     public function store(ProductPostRequest $request)
     {
         $data = $request->validated();
-        return [$data];
 
         $product = $this->products->create($data);
 
         return response($product, Response::HTTP_CREATED)
-            ->header("Location", route("products.show", ["product" => $product->id]));
+            ->header("Location", route("products.show", ["product" => $product->id], false));
     }
 
     public function show($productId)

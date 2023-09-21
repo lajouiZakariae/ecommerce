@@ -6,6 +6,8 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@types/react": "^18.2.21",
+        "@types/react-dom": "^18.2.7",
         "@vitejs/plugin-react": "^4.0.4",
         "autoprefixer": "^10.4.15",
         "axios": "^1.1.2",
@@ -15,6 +17,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@types/react-query": "^1.2.9",
         "bootstrap": "^5.3.1",
         "jotai": "^2.4.0",
         "react": "^18.2.0",

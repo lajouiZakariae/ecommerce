@@ -10,9 +10,12 @@ use App\Models\Color;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\User;
+use App\MyClass;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Benchmark;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -82,12 +85,20 @@ Route::middleware('auth:sanctum')->group(function () {
         "prefix" => "colors",
         "as" => "colors."
     ], function () {
-        Route::get("/", "index");
+        Route::get("/{trashed?}", "index")->where("trashed", "trashed");
+
+        Route::post("/restore", "restoreMany");
+
+        Route::get("/trash", "trashed");
 
         Route::middleware("can:colors.alter")->group(function (): void {
             Route::post("/", "store");
 
-            Route::delete("/{color}", "destroy");
+            Route::post("/{color}/restore", "restore");
+
+            Route::delete("/{color}/{trashed?}", "destroy");
+
+            Route::delete("/{trashed?}", "destroyMany");
 
             Route::put("/{color}", "update");
         });
@@ -99,7 +110,28 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("media", "store")->can("media.create");
     });
 
-    Route::get("/test", function (Request $request) {
-        return $request->getAcceptableContentTypes();
+    Route::get("/test", function () {
     });
+});
+
+Route::post("/login", function (Request $request) {
+    if (auth("web")->attempt([
+        "email" => $request->input("email"),
+        "password" => $request->input("password")
+    ])) {
+        $request->session()->regenerate();
+
+        return response()->make("", 204);
+    }
+});
+
+Route::post("/logout", function () {
+
+    auth()->logout();
+
+    session()->invalidate();
+
+    session()->regenerateToken();
+
+    return response()->noContent();
 });
